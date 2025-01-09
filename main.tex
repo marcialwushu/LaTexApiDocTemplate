@@ -1,0 +1,71 @@
+\documentclass{apiDoc}
+
+\title{API Pix}
+\author{INSITUIÇÃO DE PAGAMENTO}
+\date{\today}
+
+% Documento principal
+\begin{document}
+
+\makecover
+
+% Título
+\title{Documentação da API Pix 2.0.0}
+\author{Banco Central do Brasil}
+\date{Outubro de 2020}
+\maketitle
+
+\tableofcontents
+
+\section{Introdução}
+O Pix é uma solução de pagamento instantâneo desenvolvida pelo Banco Central do Brasil. Este documento descreve os detalhes técnicos para integração com a API Pix 2.0.0.
+
+\section{Credenciais e Autenticação}
+\subsection{Geração de Credenciais}
+Para acessar a API, as credenciais OAuth2.0 devem ser geradas. Inclua informações como Nome, CNPJ e certificado digital reconhecido.
+
+\subsection{Token de Acesso}
+\endpoint{POST}{/auth/server/oauth/token}{Obtém um token de acesso}{grant\_type=client\_credentials}
+
+\section{Endpoints}
+\subsection{Gerar Cobrança}
+\endpoint{PUT}{/cob/{txid}}{Cria um QR Code dinâmico para cobrança.} {"calendario": {"expiracao": "3600"}, "valor": {"original": "123.45"}}
+
+\begin{lstlisting}
+{"calendario": {"expiracao": "3600"}, "valor": {"original": "123.45"}}
+\end{lstlisting}
+
+
+\subsection{Consultar Cobrança}
+\endpoint{GET}{/cob/{txid}}{Consulta informações de uma cobrança existente.}{Nenhum parâmetro no corpo da requisição.}
+
+\section{Exemplos de Código}
+\subsection{Exemplo de Requisição}
+\begin{lstlisting}
+POST /auth/server/oauth/token HTTP/1.1
+Host: qrpix-h.bradesco.com.br
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic {Base64(client_id:client_secret)}
+
+grant_type=client_credentials
+\end{lstlisting}
+
+\section{Códigos de Resposta}
+\begin{tabular}{|c|l|}
+\hline
+\textbf{Código} & \textbf{Descrição} \\
+\hline
+200 & Sucesso \\
+400 & Erro de validação \\
+401 & Não autorizado \\
+500 & Erro interno do servidor \\
+\hline
+\end{tabular}
+
+\section{Glossário}
+\begin{itemize}
+  \item \textbf{TxID} - Identificador único para a cobrança.
+  \item \textbf{QRCode} - Código gráfico para pagamentos Pix.
+\end{itemize}
+
+\end{document}
